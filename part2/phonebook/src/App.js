@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const ContactForm = ({addContact, newName, handleNameChange, newNumber, handleNumberChange}) => {
   return(
@@ -36,16 +37,21 @@ const Search = ({filterName, searchContacts}) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
 
   const contactsToShow = persons.filter(person => person.name.toLowerCase().includes(filterName))
 
-
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+  
   const addContact = (event) => {
     event.preventDefault()
     const person = {
@@ -59,12 +65,10 @@ const App = () => {
       setNewNumber('')
     }
     else {
-      
       setPersons(persons.concat(person))
       setNewName('')
       setNewNumber('')
     }
-
   }
 
   const handleNameChange = (event) => {
@@ -77,7 +81,6 @@ const App = () => {
 
   const searchContacts = (event) => {
     setFilterName(event.target.value)
-    
   }
 
   return (
