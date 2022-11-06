@@ -22,8 +22,6 @@ const ContactForm = ({addContact, newName, handleNameChange, newNumber, handleNu
 }
 
 const Contacts = ({contacts, handleRemove}) => {
-  
-
   return (
     <div>
       {contacts.map(contact => <p key={contact.name}>{contact.name} {contact.number} <button onClick={() => handleRemove(contact.id, contact.name) } >delete</button> </p> ) }
@@ -57,7 +55,6 @@ const Notification = ({message}) => {
       {message}
     </div>
   )
-  
 }
 
 const App = () => {
@@ -67,7 +64,6 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
   const [message, setMessage] = useState(null)
 
-  console.log(persons)
   const contactsToShow = persons.filter(person => person.name.toLowerCase().includes(filterName))
 
   useEffect(() => {
@@ -90,11 +86,10 @@ const App = () => {
         const personToChange = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
         handleNewNumber(person, personToChange.id )
       }
-      
-      
       setNewName('')
       setNewNumber('')
     }
+
     else {
       personService
         .create(person)
@@ -108,7 +103,6 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-      
     }
   }
 
@@ -144,9 +138,7 @@ const App = () => {
               setMessage(null)
             }, 5000)
             setPersons(persons.filter(person => person.id !== id))
-          })
-          
-            
+          })       
   }
 
   return (
