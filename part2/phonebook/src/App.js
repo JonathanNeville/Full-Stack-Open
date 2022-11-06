@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
+import './App.css'
 
 const ContactForm = ({addContact, newName, handleNameChange, newNumber, handleNumberChange}) => {
   return(
@@ -39,11 +40,32 @@ const Search = ({filterName, searchContacts}) => {
   )
 }
 
+const Notification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+  if (message[0] === 'A') {
+    return (
+      <div className='successfulNotification'>
+        {message}
+      </div>
+    ) 
+
+  }
+  return(
+    <div className='error'>
+      {message}
+    </div>
+  )
+  
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [message, setMessage] = useState(null)
 
   console.log(persons)
   const contactsToShow = persons.filter(person => person.name.toLowerCase().includes(filterName))
@@ -78,6 +100,11 @@ const App = () => {
         .create(person)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          setMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          
           setNewName('')
           setNewNumber('')
         })
@@ -111,11 +138,21 @@ const App = () => {
           .then(response => {
             setPersons(persons.map(person => person.id !== id ? person : response.data))
           })
+          .catch(error => {
+            setMessage(`Information of ${person.name} has already been removed from server`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+            setPersons(persons.filter(person => person.id !== id))
+          })
+          
+            
   }
 
   return (
-    <div>
+    <div className='App'>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Search filterName={filterName} searchContacts={searchContacts} />
       <h2>Add Contact</h2>
       <ContactForm addContact={addContact} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
