@@ -1,7 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const Person = require('./models/person')
+
+
 
 
 
@@ -50,7 +55,9 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/info', (request, response) => {
@@ -110,15 +117,17 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const person = {
-        id: Math.floor(Math.random() * 10000),
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
+    })
+    
+    person.save().then(savedPerson => {
+        console.log("person saved")
+        response.json(savedPerson)
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    
 })
 
 const PORT = process.env.PORT || 8080
