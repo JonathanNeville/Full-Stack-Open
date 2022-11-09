@@ -99,9 +99,12 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 5000)
-          
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+          console.log("hello")
+          setMessage(error.response.data.error)
         })
     }
   }
