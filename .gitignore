@@ -3,3 +3,4 @@ notes
 part3/phonebook_backend/password.txt
 .gitignore
 .env
+part4/blog_list/.env
