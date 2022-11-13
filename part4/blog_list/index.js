@@ -6,7 +6,6 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
 
-console.log(process.env.MONGO_URL)
 
 const mongoUrl = process.env.MONGO_URL
 mongoose.connect(mongoUrl)
