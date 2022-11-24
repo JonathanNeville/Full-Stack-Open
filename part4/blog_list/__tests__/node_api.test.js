@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 
 const initialBlogs = [
@@ -20,11 +21,34 @@ const initialBlogs = [
     }
 ]
 
+const initialUsers = [{
+    username: "root",
+    name: "superuser",
+    password: "safe"
+}]
+
+let token = {}
+beforeAll(async () => {
+    await User.deleteMany({})
+    await api
+        .post('/api/users')
+        .send(initialUsers[0])
+    token = await api
+        .post('/api/login')
+        .send({
+            "username": "root",
+            "password": "safe"
+        })
+})
+
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     let blogObject = new Blog(initialBlogs[0])
+    blogObject.user = await User.findOne()
     await blogObject.save()
     blogObject = new Blog(initialBlogs[1])
+    blogObject.user = await User.findOne()
     await blogObject.save()
 })
 
@@ -51,6 +75,7 @@ test('making an HTTP POST request to /api/blogs creates a new blog post', async 
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${token.body.token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -69,6 +94,7 @@ test('if making a post request with likes propery missing defaults to 0', async 
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${token.body.token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -86,9 +112,30 @@ test('trying to post a blog with no title or url response status is 400', async 
     }
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${token.body.token}`)
         .send(newBlog)
         .expect(400)
         
+})
+
+test('posting a blog without token results in status 401 unauthorized', async () => {
+    const newBlog = {
+        "title": "test",
+        "author": "testson",
+        "url": "blog.com/test",
+        "likes": 21
+    }
+
+  
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    expect(response.body).toHaveLength(initialBlogs.length )
 })
 
 test('deleting blog deletes blog', async () => {
@@ -97,6 +144,7 @@ test('deleting blog deletes blog', async () => {
 
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', `bearer ${token.body.token}`)
         .expect(204)
     
     const response = await api.get('/api/blogs')

@@ -3,6 +3,7 @@ const { request, response } = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const userExtractor = require('../utils/userExtractor')
 
 
 blogRouter.get('/', async (request, response) => {
@@ -10,17 +11,10 @@ blogRouter.get('/', async (request, response) => {
     response.json(blogs)
   })
   
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', userExtractor, async (request, response) => {
     const body = request.body
 
-    console.log('token', request.token)
-    
-    const decodedToken = jwt.verify(request.token, process.env.TOKEN_SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({error: "token missing or invalid"})
-    }
-
-    const user = await User.findById(decodedToken.id)
+    const user = await request.user
 
     const blog = new Blog({
       title: body.title,
@@ -57,15 +51,27 @@ blogRouter.get('/:id', async (request, response) => {
   }
 })
 
-blogRouter.delete('/:id', async (request, response) => {
-  const id = request.params.id
-  try  {
-    await Blog.findByIdAndRemove(id)
-    response.status(204).end()
+blogRouter.delete('/:id', userExtractor,async (request, response) => {
+  const blogId = request.params.id
+
+  const loggedInUser = request.user
+  const blog = await Blog.findById(blogId)
+ 
+  
+  if (blog.user.toString() === loggedInUser.id.toString()) {
+    try  {
+      await Blog.findByIdAndRemove(blogId)
+      response.status(204).end()
+    }
+    catch (exception) {
+      response.status(404).end()
+    }
   }
-  catch (exception) {
-    response.status(404).end()
+  else {
+    response.status(403).json({error: "logged in user does not match creator of blog"})
   }
+
+  
 })
 
 blogRouter.put('/:id', async (request, response) => {
