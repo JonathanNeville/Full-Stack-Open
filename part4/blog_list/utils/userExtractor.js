@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 const userExtractor = async (request, response, next) => {
-    
+    /* console.log(request) */
+
     if (!request.token) {
         return response.status(401).json({error: "token missing or invalid"})
     }
