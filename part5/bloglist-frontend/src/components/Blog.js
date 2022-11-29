@@ -1,14 +1,41 @@
 import { useState } from "react"
 import blogs from "../services/blogs"
 
-const Blog = ({blog}) => {
+const Blog = ({blog, user}) => {
   const [expanded, setExpanded] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
+  const [showDelete, setShowDelete] = useState(false)
 
   const hideWhenExpanded = { display: expanded ? 'none': '' }
   const showWhenExpanded = { display: expanded ? '' : 'none' }
-  console.log(blog.likes)
   const toggleExpanded = () => {
     setExpanded(!expanded)
+  }
+
+  /* if (blog.user.username === user.username) {
+    setShowDelete(true)
+  } */
+
+  const showDeleteButton = {display: (blog.user.username === user.username) ? '': 'none'}
+
+  const addOneLike = async () => {
+    const updatedBlog = {
+      user: blog.user.id,
+      likes: likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+    setLikes(likes + 1)
+    await blogs.putBlog(updatedBlog, blog.id)
+    
+  } 
+
+  const removeBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      blogs.deleteBlog(blog.id)
+    }
+    
   }
 
   const blogStyle = {
@@ -31,8 +58,9 @@ const Blog = ({blog}) => {
           <button onClick={toggleExpanded}>hide</button>
         </p>
         <p>{blog.url}</p>
-        <p>likes {blog.likes} <button>like</button></p>
+        <p>likes {likes} <button onClick={addOneLike}>like</button></p>
         <p>{blog.user.name}</p>
+        <button style={showDeleteButton} onClick={removeBlog}>remove</button>
       </div>
     </div>
   )

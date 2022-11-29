@@ -56,7 +56,7 @@ const App =  () => {
     const returnedBlog = await blogService.postBlog(newBlog)
     setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     setBlogs(blogs.concat(returnedBlog)) 
-    
+
     setTimeout(() => {
       setMessage(null)
     }, 5000)
@@ -64,8 +64,9 @@ const App =  () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a,b) => b.likes - a.likes) )
     )  
+    
   }, [])
 
   useEffect(() => {
@@ -73,6 +74,7 @@ const App =  () => {
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
   if (user === null) {
@@ -116,7 +118,7 @@ const App =  () => {
         <button onClick={handleLogout}>log out</button>
         </p>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} user={user} />
         )}
       </div>
     </div>
