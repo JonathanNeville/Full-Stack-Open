@@ -5,7 +5,7 @@ import TogglableVisibility from './components/TogglableVisibilty'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const Notification = ({message, className}) => {
+const Notification = ({ message, className }) => {
   if (message === null) {
     return null
   }
@@ -82,23 +82,23 @@ const App =  () => {
       <div>
         <Notification message={message} className="error"/>
         <form onSubmit={handleLogin}>
-            <div>
+          <div>
                 Username
-                <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({target}) => setUsername(target.value)} />
-            </div>
-            <div>
+            <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)} />
+          </div>
+          <div>
                 Password
-                <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({target}) => setPassword(target.value)} />
-            </div>
-            <button type="submit">login</button>
+            <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)} />
+          </div>
+          <button type="submit">login</button>
         </form>
       </div>
     )
@@ -115,7 +115,7 @@ const App =  () => {
       <div>
         <h2>blogs</h2>
         <p>{user.name} logged in
-        <button onClick={handleLogout}>log out</button>
+          <button onClick={handleLogout}>log out</button>
         </p>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} user={user} />

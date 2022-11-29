@@ -1,10 +1,10 @@
-import { useState } from "react"
-import blogs from "../services/blogs"
+import { useState } from 'react'
+import blogs from '../services/blogs'
 
-const Blog = ({blog, user}) => {
+const Blog = ({ blog, user }) => {
   const [expanded, setExpanded] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
-  const [showDelete, setShowDelete] = useState(false)
+ 
 
   const hideWhenExpanded = { display: expanded ? 'none': '' }
   const showWhenExpanded = { display: expanded ? '' : 'none' }
@@ -12,11 +12,8 @@ const Blog = ({blog, user}) => {
     setExpanded(!expanded)
   }
 
-  /* if (blog.user.username === user.username) {
-    setShowDelete(true)
-  } */
 
-  const showDeleteButton = {display: (blog.user.username === user.username) ? '': 'none'}
+  const showDeleteButton = { display: (blog.user.username === user.username) ? '': 'none' }
 
   const addOneLike = async () => {
     const updatedBlog = {
