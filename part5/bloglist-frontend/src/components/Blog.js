@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogs from '../services/blogs'
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, updateBlog }) => {
   const [expanded, setExpanded] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
  
@@ -24,7 +24,7 @@ const Blog = ({ blog, user }) => {
       url: blog.url
     }
     setLikes(likes + 1)
-    await blogs.putBlog(updatedBlog, blog.id)
+    updateBlog(updatedBlog, blog.id)
     
   } 
 
@@ -49,7 +49,7 @@ const Blog = ({ blog, user }) => {
         {blog.title} {blog.author}
         <button onClick={toggleExpanded}>view</button>
       </div>
-      <div style={showWhenExpanded}>
+      <div style={showWhenExpanded} className="expandedBlog">
         <p>
           {blog.title} {blog.author}
           <button onClick={toggleExpanded}>hide</button>

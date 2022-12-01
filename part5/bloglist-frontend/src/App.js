@@ -61,6 +61,10 @@ const App =  () => {
       setMessage(null)
     }, 5000)
   }
+  const updateBlog = async (updatedBlog, id) => {
+    await blogService.putBlog(updatedBlog, id)
+    
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -118,7 +122,7 @@ const App =  () => {
           <button onClick={handleLogout}>log out</button>
         </p>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} />
+          <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} />
         )}
       </div>
     </div>
