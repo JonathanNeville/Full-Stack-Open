@@ -55,7 +55,7 @@ const Blog = ({ blog, user, updateBlog }) => {
           <button onClick={toggleExpanded}>hide</button>
         </p>
         <p>{blog.url}</p>
-        <p>likes {likes} <button onClick={addOneLike}>like</button></p>
+        <p>likes {likes} <button id='likeButton' onClick={addOneLike}>like</button></p>
         <p>{blog.user.name}</p>
         <button style={showDeleteButton} onClick={removeBlog}>remove</button>
       </div>
