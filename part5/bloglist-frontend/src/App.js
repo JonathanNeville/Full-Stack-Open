@@ -66,6 +66,16 @@ const App =  () => {
     
   }
 
+  const removeBlog = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      await blogService.deleteBlog(blog.id)
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs.sort((a,b) => b.likes - a.likes) )
+      )  
+
+    }
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((a,b) => b.likes - a.likes) )
@@ -124,7 +134,7 @@ const App =  () => {
           <button onClick={handleLogout}>log out</button>
         </p>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} removeBlog={removeBlog} />
         )}
       </div>
     </div>

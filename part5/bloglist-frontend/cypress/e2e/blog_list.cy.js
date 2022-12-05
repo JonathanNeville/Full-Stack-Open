@@ -2,6 +2,7 @@
 
 
 
+
 describe('Blog List', () => {
     beforeEach(() => {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -64,6 +65,12 @@ describe('Blog List', () => {
                 cy.contains('Fortress').contains('view').click()
                 cy.get('#likeButton').click()
                 cy.contains('likes 1')
+            })
+            it('Logged in user can remove blog', () => {
+                cy.contains('Fortress').contains('view').click()
+                cy.get('#removeButton').click()
+                cy.get('html').should('not.contain', 'Fortress')
+
             })
         })
     })
