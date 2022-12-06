@@ -3,6 +3,7 @@
 
 
 
+
 describe('Blog List', () => {
     beforeEach(() => {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -71,6 +72,34 @@ describe('Blog List', () => {
                 cy.get('#removeButton').click()
                 cy.get('html').should('not.contain', 'Fortress')
 
+            })
+            
+        })
+        describe('And there is more than one blog', () => {
+            beforeEach(() => {
+                cy.createBlog({
+                    title: 'Blog one',
+                    author: 'Gordon Mayflower',
+                    url: 'fruits.com'
+                })
+                cy.createBlog({
+                    title: 'Blog two',
+                    author: 'Gordon Mayflower',
+                    url: 'fruits.com'
+                })
+            })
+
+            it('Blog with most likes is displayed first', () => {
+                cy.contains('Blog one').contains('view').click()
+                cy.contains('Blog two').contains('view').click()
+                cy.contains('.expandedBlog', 'Blog one').contains('like').click()
+                cy.get('.expandedBlog').eq(0).should('contain', 'Blog one')
+                cy.get('.expandedBlog').eq(1).should('contain', 'Blog two')
+                cy.contains('.expandedBlog', 'Blog two').contains('like').click()
+                cy.contains('.expandedBlog', 'Blog two').contains('like').click()
+                cy.wait(5000)
+                cy.get('.expandedBlog').eq(0).should('contain', 'Blog two')
+                cy.get('.expandedBlog').eq(1).should('contain', 'Blog one')
             })
         })
     })
