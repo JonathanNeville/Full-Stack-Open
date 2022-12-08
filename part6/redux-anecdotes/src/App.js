@@ -12,7 +12,7 @@ const App = () => {
   const addAnecdote = (event) => {
     event.preventDefault()
     const data = event.target.anecdote.value
-    createAnecdote(data)
+    dispatch(createAnecdote(data))
   }
 
   return (
