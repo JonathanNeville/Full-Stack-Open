@@ -2,12 +2,12 @@ import axios from 'axios'
 
 const baseUrl = 'http://localhost:3001/anecdotes'
 
-const getAll = async() => {
+const getAll = async () => {
     const response = await axios.get(baseUrl)
     return response.data
 }
 
-const createNew = async(body) => {
+const createNew = async (body) => {
     const object = {
         content: body,
         votes: 0
@@ -16,4 +16,9 @@ const createNew = async(body) => {
     return response.data
 }
 
-export default { getAll, createNew }
+const updateAnecdote = async (anecdote) => {
+    const response = await axios.put(`${baseUrl}/${anecdote.id}`, anecdote)
+    return response.data
+}
+
+export default { getAll, createNew, updateAnecdote }

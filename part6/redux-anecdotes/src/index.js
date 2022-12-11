@@ -7,9 +7,7 @@ import anecdoteService from './services/anecdotes'
 
 import store from './store'
 
-anecdoteService.getAll().then(anecdotes => {
-  store.dispatch(setAnecdotes(anecdotes))
-})
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>

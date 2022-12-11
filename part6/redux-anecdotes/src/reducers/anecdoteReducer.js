@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { notInitialized } from "react-redux/es/utils/useSyncExternalStore"
+import anecdoteService from '../services/anecdotes'
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -26,18 +27,10 @@ const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    createAnecdote(state, action) {
-     state.push(action.payload)
-    },
-    voteOn(state, action) {
-      const id = action.payload
-        const anecdoteToVoteOn = state.find(anecdote => anecdote.id === id)
-        const changedAnecdote = {
-          ...anecdoteToVoteOn,
-          votes: anecdoteToVoteOn.votes + 1
-        }
-        return state.map(anecdote => 
-          anecdote.id !== id ? anecdote: changedAnecdote)
+    updateAnecdote(state, action) {
+      
+      return state.map(anecdote => 
+        anecdote.id !== action.payload.id ? anecdote: action.payload)
     },
     appendAnecdote(state, action) {
       return state.concat(action.payload)
@@ -48,6 +41,30 @@ const anecdoteSlice = createSlice({
   }
 })
 
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes  = await anecdoteService.getAll()
+    dispatch(setAnecdotes(anecdotes))
+  }
+}
 
-export const { createAnecdote, voteOn, appendAnecdote,setAnecdotes } = anecdoteSlice.actions
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch(appendAnecdote(newAnecdote))
+  }
+}
+
+export const voteOn = (anecdote) => {
+  return async (dispatch) => {
+    const anecdoteToVoteOn  = {
+      ...anecdote,
+      votes: anecdote.votes + 1
+    }
+    const updatedAnecdote = await anecdoteService.updateAnecdote(anecdoteToVoteOn)
+    dispatch(updateAnecdote(updatedAnecdote))
+  }
+}
+
+export const {appendAnecdote,setAnecdotes, updateAnecdote } = anecdoteSlice.actions
 export default anecdoteSlice.reducer
