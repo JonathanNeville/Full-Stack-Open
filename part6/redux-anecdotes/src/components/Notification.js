@@ -8,6 +8,8 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
+  style.display = notification[0].length > 1 ? '' : 'none'
+  console.log(style)
   return (
     <div style={style}>
       {notification}

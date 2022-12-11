@@ -2,7 +2,7 @@ const { createSlice } = require("@reduxjs/toolkit");
 
 const initialState = [
     
-        'Hello world'
+        ''
     
 ]
 
@@ -13,8 +13,13 @@ const notificationSlice = createSlice({
         changeMessage(state, action) {
             const message = action.payload
             state = [message]
+            return state
+        },
+        resetMessage(state, action) {
+            state = [action.payload]
+            return state
         }
     }
 })
-export const {changeMessage} = notificationSlice.actions
+export const {changeMessage, resetMessage} = notificationSlice.actions
 export default notificationSlice.reducer
