@@ -1,3 +1,4 @@
+import { createSlice } from "@reduxjs/toolkit"
 import { notInitialized } from "react-redux/es/utils/useSyncExternalStore"
 
 const anecdotesAtStart = [
@@ -19,14 +20,17 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState = []
 
-const anecdoteReducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch(action.type) {
-    case 'VOTE': {
-        const id = action.data.id
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState: [],
+  reducers: {
+    createAnecdote(state, action) {
+     state.push(action.payload)
+    },
+    voteOn(state, action) {
+      const id = action.payload
         const anecdoteToVoteOn = state.find(anecdote => anecdote.id === id)
         const changedAnecdote = {
           ...anecdoteToVoteOn,
@@ -34,28 +38,16 @@ const anecdoteReducer = (state = initialState, action) => {
         }
         return state.map(anecdote => 
           anecdote.id !== id ? anecdote: changedAnecdote)
-      }
-    case 'ADD': {
-      const anecdote = action.data
-      return state.concat(anecdote)
+    },
+    appendAnecdote(state, action) {
+      return state.concat(action.payload)
+    },
+    setAnecdotes(state, action) {
+      return action.payload
     }
-    default:
-      return state
   }
-}
+})
 
-export const voteOn = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
-  }
-}
 
-export const createAnecdote = (data) => {
-  return {
-    type: 'ADD',
-    data: asObject(data)
-  }
-}
-
-export default anecdoteReducer
+export const { createAnecdote, voteOn, appendAnecdote,setAnecdotes } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
