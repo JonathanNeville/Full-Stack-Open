@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createBlog } from "../reducers/blogReducer";
 
-const CreateBlog = ({ handleCreateBlog }) => {
+const CreateBlog = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const dispatch = useDispatch();
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -17,11 +20,13 @@ const CreateBlog = ({ handleCreateBlog }) => {
 
   const addBlog = (event) => {
     event.preventDefault();
-    handleCreateBlog({
-      title: title,
-      author: author,
-      url: url,
-    });
+    dispatch(
+      createBlog({
+        title: title,
+        author: author,
+        url: url,
+      })
+    );
     setTitle("");
     setAuthor("");
     setUrl("");

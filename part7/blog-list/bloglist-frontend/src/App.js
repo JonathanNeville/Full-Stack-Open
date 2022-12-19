@@ -2,23 +2,19 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import CreateBlog from "./components/CreateBlog";
 import TogglableVisibility from "./components/TogglableVisibilty";
+import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-
-const Notification = ({ message, className }) => {
-  if (message === null) {
-    return null;
-  }
-
-  return <div className={`message ${className}`}>{message}</div>;
-};
+import { useDispatch, useSelector } from "react-redux";
+import { initializeBlogs } from "./reducers/blogReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -47,38 +43,9 @@ const App = () => {
     setUser(null);
   };
 
-  const handleCreateBlog = async (newBlog) => {
-    const returnedBlog = await blogService.postBlog(newBlog);
-    setMessage(
-      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-    );
-    setBlogs(blogs.concat(returnedBlog));
-
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-  };
-  const updateBlog = async (updatedBlog, id) => {
-    await blogService.putBlog(updatedBlog, id);
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  };
-
-  const removeBlog = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await blogService.deleteBlog(blog.id);
-      blogService
-        .getAll()
-        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-    }
-  };
-
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem(
@@ -122,9 +89,9 @@ const App = () => {
   }
   return (
     <div>
-      <Notification message={message} className="success" />
+      <Notification className="success" />
       <TogglableVisibility buttonLabel="create blog">
-        <CreateBlog handleCreateBlog={handleCreateBlog} />
+        <CreateBlog />
       </TogglableVisibility>
 
       <div>
@@ -134,13 +101,7 @@ const App = () => {
           <button onClick={handleLogout}>log out</button>
         </p>
         {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            updateBlog={updateBlog}
-            removeBlog={removeBlog}
-          />
+          <Blog key={blog.id} blog={blog} user={user} />
         ))}
       </div>
     </div>

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import blogs from "../services/blogs";
+import { likeBlog, removeBlog } from "../reducers/blogReducer";
+import { useDispatch } from "react-redux";
+import { changeMessage } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, user, updateBlog, removeBlog }) => {
+const Blog = ({ blog, user }) => {
   const [expanded, setExpanded] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
-
+  const dispatch = useDispatch();
   const hideWhenExpanded = { display: expanded ? "none" : "" };
   const showWhenExpanded = { display: expanded ? "" : "none" };
   const toggleExpanded = () => {
@@ -15,20 +16,13 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
     display: blog.user.username === user.username ? "" : "none",
   };
 
-  const addOneLike = async () => {
-    const updatedBlog = {
-      user: blog.user.id,
-      likes: likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    };
-    setLikes(likes + 1);
-    updateBlog(updatedBlog, blog.id);
+  const addOneLike = () => {
+    dispatch(likeBlog(blog));
+    dispatch(changeMessage(`liked blog ${blog.title}`));
   };
 
   const handleRemoveBlog = () => {
-    removeBlog(blog);
+    dispatch(removeBlog(blog));
   };
 
   const blogStyle = {
@@ -52,7 +46,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
         </p>
         <p>{blog.url}</p>
         <p>
-          likes {likes}{" "}
+          likes {blog.likes}{" "}
           <button id="likeButton" onClick={addOneLike}>
             like
           </button>
