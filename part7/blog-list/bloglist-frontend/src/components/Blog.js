@@ -36,7 +36,7 @@ const Blog = ({ blog, user }) => {
   return (
     <div style={blogStyle}>
       <div style={hideWhenExpanded}>
-        {blog.title} {blog.author}
+        {blog.title} {blog.author} {" "}
         <button onClick={toggleExpanded}>view</button>
       </div>
       <div style={showWhenExpanded} className="expandedBlog">

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
 import CreateBlog from "./components/CreateBlog";
 import TogglableVisibility from "./components/TogglableVisibilty";
 import Notification from "./components/Notification";
@@ -7,13 +6,15 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeBlogs } from "./reducers/blogReducer";
+import { changeMessage } from "./reducers/notificationReducer";
+import BlogList from "./components/BlogList";
+import Login from "./components/Login";
+import userReducer, { logIn, logOut, returningUser, setUser } from "./reducers/userReducer";
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs);
+  const user = useSelector(state => state.user)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
 
   const handleLogin = async (event) => {
@@ -30,17 +31,14 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setMessage("Wrong credentials");
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      dispatch(changeMessage("Wrong Credentials"))
     }
   };
 
   const handleLogout = (event) => {
     event.preventDefault();
     window.localStorage.clear();
-    setUser(null);
+    dispatch(logOut())
   };
 
   useEffect(() => {
@@ -51,39 +49,19 @@ const App = () => {
     const loggedInUserJSON = window.localStorage.getItem(
       "loggedInBlogListUser"
     );
+    console.log(loggedInUserJSON)
     if (loggedInUserJSON) {
-      const user = JSON.parse(loggedInUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const loggedInUser = JSON.parse(loggedInUserJSON)
+      console.log(loggedInUser)
+      dispatch(returningUser(loggedInUser))
+      /* blogService.setToken(loggedInUser.token); */
+      console.log(user)
     }
   }, []);
   if (user === null) {
     return (
       <div>
-        <Notification message={message} className="error" />
-        <form onSubmit={handleLogin}>
-          <div>
-            Username
-            <input
-              id="username"
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            Password
-            <input
-              id="password"
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
+        <Login />
       </div>
     );
   }
@@ -93,17 +71,7 @@ const App = () => {
       <TogglableVisibility buttonLabel="create blog">
         <CreateBlog />
       </TogglableVisibility>
-
-      <div>
-        <h2>blogs</h2>
-        <p>
-          {user.name} logged in
-          <button onClick={handleLogout}>log out</button>
-        </p>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
-        ))}
-      </div>
+      <BlogList user={user} handleLogout={handleLogout} />
     </div>
   );
 };
