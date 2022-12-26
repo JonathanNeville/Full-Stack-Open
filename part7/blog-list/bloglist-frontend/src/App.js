@@ -14,6 +14,7 @@ import {
 import Users from "./components/Users";
 import { initializeUsers } from "./reducers/usersReducer";
 import User from "./components/User";
+import BlogView from "./components/BlogView";
 
 const App = () => {
   const user = useSelector(state => state.user)
@@ -53,23 +54,30 @@ const App = () => {
       </div>
     );
   }
+
+  const navPadding = {
+    padding: 5
+  }
+
   return (
     <div>
-      <Notification className="success" />
-      <TogglableVisibility buttonLabel="create blog">
-        <CreateBlog />
-      </TogglableVisibility>
-      <h2>blogs</h2>
-        <p>
+      <Router>
+        <div>
+          <Link to="/" style={navPadding}>blogs</Link>
+          <Link to="/users" style={navPadding}>users</Link>
           {user.name} logged in {" "}
           <button onClick={handleLogout}>log out</button>
-        </p>
-      
-      <Router>
+        </div>
+        <Notification className="success" />
+        <TogglableVisibility buttonLabel="create blog">
+          <CreateBlog />
+        </TogglableVisibility>
+        <h2>blogs</h2>
         <Routes>
           <Route path='/' element={<BlogList />} />
           <Route path='/users' element={<Users />} />
           <Route path="/users/:id" element={<User />} />
+          <Route path="blogs/:id" element={<BlogView />} />
         </Routes>
       </Router>
     </div>
