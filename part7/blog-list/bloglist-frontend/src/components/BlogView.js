@@ -1,6 +1,7 @@
+import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { redirect, useParams } from "react-router-dom"
-import { likeBlog, removeBlog } from "../reducers/blogReducer"
+import { addComment, likeBlog, removeBlog } from "../reducers/blogReducer"
 import { changeMessage } from "../reducers/notificationReducer"
 
 
@@ -10,6 +11,7 @@ const BlogView  = () => {
     const blog = blogs.find((blog) => blog.id === id)
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user)
+    const [comment, setComment] = useState("")
     
     const addOneLike = () => {
         dispatch(likeBlog(blog));
@@ -20,7 +22,6 @@ const BlogView  = () => {
         dispatch(removeBlog(blog))
         return redirect("/")
     }
-    
     
 
     if (!blog) {
@@ -33,6 +34,13 @@ const BlogView  = () => {
             display: blog.user.username === user.username ? "" : "none",
             };
     }
+
+    const submitComment = (event) => {
+        event.preventDefault()
+        dispatch(addComment(blog, comment))
+        setComment("")
+    }
+
     return(
         <div>
             <h2>{blog.title} by {blog.author}</h2>
@@ -42,6 +50,22 @@ const BlogView  = () => {
             </p>
             <p>created by {blog.user.name}</p>
             <button onClick={handleRemove} style={showDeleteButton}>Remove</button>
+            <div>
+                <h2>comments</h2>
+                <form onSubmit={submitComment}>
+                    <input
+                    id="comment"
+                    name="Comment"
+                    value={comment}
+                    type="text"
+                    onChange={(event) => setComment(event.target.value)} />
+                    <button type="submit">add comment</button>
+                </form>
+                <ul>
+                {blog.comments.map((comment) => <li key={comment}>{comment}</li>)}
+                </ul>
+                
+            </div>
         </div>
     )
 }

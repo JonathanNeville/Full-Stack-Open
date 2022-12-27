@@ -1,0 +1,7 @@
+post http://localhost:3003/api/blogs/637d0572674069e5a88f836f/comments
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiaXJkIiwiaWQiOiI2MzdhM2RiYmIwY2QyZWYwYTA4ZGY0YTAiLCJpYXQiOjE2NzIxMzMxNzh9.PzgXhxP8QTDZWhictQTezLACr8EBP5dJVx4qyCbMl7c
+
+{
+    "comment": "Very interesting"
+}

@@ -62,6 +62,17 @@ export const removeBlog = (blog) => {
   };
 };
 
+export const addComment = (blog, comment) => {
+  return async (dispatch) => {
+    await blogsService.postComment(blog.id, {comment: comment})
+    const updatedBlog = {
+      ...blog,
+      comments: blog.comments.concat(comment)
+    }
+    dispatch(updateBlog(updatedBlog))
+  }
+}
+
 export const { appendBlog, setBlogs, updateBlog, filterBlog } =
   blogSlice.actions;
 
