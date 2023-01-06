@@ -1,60 +1,57 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { changeMessage } from "../reducers/notificationReducer";
 import { logIn } from "../reducers/userReducer";
-import Notification from "./Notification"
-import blogService from "../services/blogs";
+import Notification from "./Notification";
+import { Button, Container, TextField, Typography } from "@mui/material";
 
 const Login = () => {
-  const user = useSelector(state => state.user)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    try  {
-      const user = await dispatch(logIn(username, password))
-      /* window.localStorage.setItem("loggedInBlogListUser", JSON.stringify(user));
-      blogService.setToken(user.token); */
-      console.log(user)
+    try {
+      const user = await dispatch(logIn(username, password));
+      console.log(user);
       setUsername("");
       setPassword("");
-      
     } catch (exception) {
-      dispatch(changeMessage("Wrong Credentials"))
+      dispatch(changeMessage("Wrong Credentials"));
     }
-    
   };
 
   return (
-    <div>
-      <Notification  className="error" />
+    <Container fixed={true} sx={{ margin: "auto" }}>
+      <Typography variant="h2">Blogs</Typography>
+      <Notification className="error" />
       <form onSubmit={handleLogin}>
         <div>
-          Username
-          <input
+          <TextField
+            label="Username"
             id="username"
             type="text"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
+            sx={{ margin: 1 }}
           />
         </div>
         <div>
-          Password
-          <input
+          <TextField
+            label="Password"
             id="password"
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
+            sx={{ margin: 1 }}
           />
         </div>
-        <button type="submit">login</button>
+        <Button type="submit">login</Button>
       </form>
-    </div>
-  )
-  
-  };
+    </Container>
+  );
+};
 export default Login;

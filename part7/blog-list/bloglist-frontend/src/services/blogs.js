@@ -15,7 +15,7 @@ const getAll = async () => {
 
 const resetToken = () => {
   token = null;
-}
+};
 
 const postBlog = async (newBlog) => {
   const config = {
@@ -44,9 +44,17 @@ const deleteBlog = async (blogId) => {
 };
 
 const postComment = async (blogId, comment) => {
-  const blogUrl = `${baseUrl}/${blogId}/comments`
-  
-  await axios.post(blogUrl, comment)
-}
+  const blogUrl = `${baseUrl}/${blogId}/comments`;
 
-export default { setToken, resetToken, getAll, postBlog, putBlog, deleteBlog, postComment };
+  await axios.post(blogUrl, comment);
+};
+
+export default {
+  setToken,
+  resetToken,
+  getAll,
+  postBlog,
+  putBlog,
+  deleteBlog,
+  postComment,
+};

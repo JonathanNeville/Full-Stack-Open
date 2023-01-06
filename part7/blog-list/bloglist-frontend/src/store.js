@@ -15,13 +15,15 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  window.localStorage.setItem("loggedInBlogListUser", JSON.stringify(store.getState().user))
+  window.localStorage.setItem(
+    "loggedInBlogListUser",
+    JSON.stringify(store.getState().user)
+  );
   if (store.getState().user) {
-    blogService.setToken(store.getState().user.token)
+    blogService.setToken(store.getState().user.token);
+  } else {
+    blogService.resetToken();
   }
-  else {
-    blogService.resetToken()
-  }
-} );
+});
 
 export default store;

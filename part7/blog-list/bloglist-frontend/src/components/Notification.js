@@ -1,3 +1,4 @@
+import { Alert } from "@mui/material";
 import { connect } from "react-redux";
 
 const Notification = (props) => {
@@ -8,9 +9,17 @@ const Notification = (props) => {
     borderRadius: 10,
   };
   style.display = props.notification.length > 0 ? "" : "none";
-  style.backgroundColor = props.className === "error" ? "salmon": "greenyellow";
+  style.backgroundColor =
+    props.className === "error" ? "salmon" : "greenyellow";
 
-  return <div style={style}>{props.notification}</div>;
+  const alertDisplay = props.notification.length > 0 ? "" : "none";
+  const severity = props.className === "error" ? "error" : "success";
+
+  return (
+    <Alert severity={severity} sx={{ display: alertDisplay, margin: 1 }}>
+      {props.notification}
+    </Alert>
+  );
 };
 
 const mapStateToProps = (state) => {
