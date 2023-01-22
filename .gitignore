@@ -5,3 +5,5 @@ part3/phonebook_backend/password.txt
 .env
 part4/blog_list/.env
 counter
+part8/library-frontend/node_modules
+part8/library/node_modules
