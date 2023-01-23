@@ -3,6 +3,9 @@ const mongoose = require('mongoose')
 const { v1: uuid } = require('uuid')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
+require('dotenv').config()
+
+const MONGODB_URI = process.env.MONGODB_URI
 
 
 mongoose.connect(MONGODB_URI)
@@ -74,8 +77,21 @@ const resolvers = {
   },
   Mutation : {
     addBook: async (root, args) => {
-       const author = await Author.findOne({name: args.author})
-       console.log(author)
+       let author = await Author.findOne({name: args.author})
+       
+      if (!author) {
+        author = new Author({name: args.author})
+        try {
+          await author.save()
+        }
+        catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
+      } 
+      
+
        const book = new Book({...args, author: author._id})
        try {
         await book.save()
