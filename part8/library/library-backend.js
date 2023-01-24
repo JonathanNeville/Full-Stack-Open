@@ -88,6 +88,9 @@ const resolvers = {
         return (await Book.find({author: obj._id})).length
     }
   },
+  Book: {
+    author: async (obj) => Author.findOne({_id: obj.author})
+  },
   Mutation : {
     addBook: async (root, args, context) => {
       const loggedInUser = context.currentUser
