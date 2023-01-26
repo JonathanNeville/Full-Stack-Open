@@ -18,6 +18,7 @@ export const GET_BOOKS = gql`
                 born
             }
             published
+            genres
         }
     }
 `
