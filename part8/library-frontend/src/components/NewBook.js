@@ -1,6 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
 import { useState } from 'react'
-import { GET_AUTHORS, GET_BOOKS } from '../queries'
+import { GET_AUTHORS, GET_BOOKS, GET_BOOKS_OF_GENRE } from '../queries'
 
 const CREATE_BOOK = gql`
   mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
@@ -33,14 +33,16 @@ const NewBook = (props) => {
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
     update: (cache, response) => {
-      cache.updateQuery({ query: GET_BOOKS },({ allBooks }) => {
+      cache.updateQuery({ query: GET_BOOKS_OF_GENRE, variables: {genre: ""} },({ allBooks }) => {
+        console.log(response)
+        console.log(allBooks)
         return {
           allBooks: allBooks.concat(response.data.addBook)
         }
       })
       cache.updateQuery({ query: GET_AUTHORS }, ({ allAuthors }) => {
         return {
-          allAuthors: allAuthors.concat(response.data.addBook)
+          allAuthors: allAuthors.concat(response.data.addBook.author)
         }
       })
     }
