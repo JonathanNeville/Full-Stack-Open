@@ -2,12 +2,13 @@ import { useQuery } from "@apollo/client"
 import { useState } from "react"
 import ReactSelect from "react-select"
 
-import { GET_BOOKS } from "../queries"
+import { GET_BOOKS, GET_BOOKS_OF_GENRE, GET_GENRES } from "../queries"
 
 const Books = (props) => {
+  
   const [filteredBooks, setFilteredBooks] = useState([])
-
-  const result = useQuery(GET_BOOKS)
+  const genres  = useQuery(GET_GENRES)
+  const result = useQuery(GET_BOOKS_OF_GENRE, {variables: {genre: ""}})
   if (!props.show) {
     return null
   }
@@ -19,17 +20,20 @@ const Books = (props) => {
   const books = result.data.allBooks
   
 
-  const allGenres = []
-  for (let i = 0; i < books.length; i++) {
-    allGenres.push(...books[i].genres)
-  }
-  const  uniqueGenres =  [...new Set(allGenres)]
-  const selectOptions = uniqueGenres.map((g) =>(
+  const allGenres = genres.data.allGenres
+  
+  const selectOptions = allGenres.map((g) =>(
     {value: g, label: g}
   ))
 
   const applyFilter = (target) => {
-    setFilteredBooks(books.filter(b => b.genres.includes(target.value)))
+    if (target.value === "All Genres") {
+      result.refetch({genre: ""})
+    }
+    else {
+      result.refetch({genre: target.value})
+    }
+
     
   }
   

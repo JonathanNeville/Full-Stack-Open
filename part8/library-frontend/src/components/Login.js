@@ -27,7 +27,7 @@ const Login = (props) => {
             const token = result.data.login.value
             props.setToken(token)
             localStorage.setItem('library-user-token', token)
-            console.log(token)
+            props.result.refetch()
         }
     }, [result.data])
 

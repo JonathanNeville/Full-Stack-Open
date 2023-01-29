@@ -1,20 +1,10 @@
 import { gql, useQuery } from "@apollo/client"
-import { GET_BOOKS } from "../queries"
+import { GET_BOOKS_OF_GENRE } from "../queries"
 
-const GET_BOOKS_OF_GENRE = gql`
-    query getRecomendedBooks($genre: String!) {
-        allBooks(genre: $genre) {
-            author {
-                name
-            }
-            title
-            published
-        }
-    }
-`
 
 const Recomended = (props) => {
-    const  result  = useQuery(GET_BOOKS_OF_GENRE, {variables: {genre: "scifi"}}, )
+    /* TODO: GET AUTHORS FAVOURITE GENRE AND PASS IT TO QUERY */
+    const  result  = useQuery(GET_BOOKS_OF_GENRE, {variables: {genre: props.genre},} )
 
     if (!props.show) {
         return null
@@ -23,10 +13,12 @@ const Recomended = (props) => {
     if (result.loading) {
         return <div>...loading</div>
     }
-    console.log(result)
-    const books = result.data.allBooks
-    console.log(result)
     
+    const books = result.data.allBooks
+    
+    if (result.variables.genre !== props.genre) {
+        result.refetch()
+    }
     return (
         <div>
             <table>
