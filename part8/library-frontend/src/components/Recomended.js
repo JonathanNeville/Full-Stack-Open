@@ -3,7 +3,6 @@ import { GET_BOOKS_OF_GENRE } from "../queries"
 
 
 const Recomended = (props) => {
-    /* TODO: GET AUTHORS FAVOURITE GENRE AND PASS IT TO QUERY */
     const  result  = useQuery(GET_BOOKS_OF_GENRE, {variables: {genre: props.genre},} )
 
     if (!props.show) {

@@ -34,8 +34,6 @@ const NewBook = (props) => {
   const [ createBook ] = useMutation(CREATE_BOOK, {
     update: (cache, response) => {
       cache.updateQuery({ query: GET_BOOKS_OF_GENRE, variables: {genre: ""} },({ allBooks }) => {
-        console.log(response)
-        console.log(allBooks)
         return {
           allBooks: allBooks.concat(response.data.addBook)
         }
