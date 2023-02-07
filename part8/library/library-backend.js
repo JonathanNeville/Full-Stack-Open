@@ -15,6 +15,7 @@ const User = require('./models/User')
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 const { WebSocketServer } = require('ws')
+const bookLoader = require('./loaders')
 require('dotenv').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
@@ -53,7 +54,19 @@ const start = async () => {
         )
         const currentUser = await User.findById(decodedToken.id)
         
-        return { currentUser }
+        return { 
+          currentUser,
+          loaders: {
+            books: bookLoader
+          }
+        }
+      }
+      else {
+        return {
+          loaders: {
+            books: bookLoader
+          }
+        }
       }
     },
     plugins: [
@@ -89,7 +102,19 @@ const start = async () => {
           )
           const currentUser = await User.findById(decodedToken.id)
           
-          return { currentUser }
+          return { 
+            currentUser,
+            loaders: {
+              books: bookLoader
+            }
+          }
+        }
+        else {
+          return {
+            loaders: {
+              books: bookLoader
+            }
+          }
         }
       },
     })

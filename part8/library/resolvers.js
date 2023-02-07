@@ -20,7 +20,7 @@ const resolvers = {
           }
           return Book.find({})
       },
-      allAuthors: async () => Author.find({}),
+      allAuthors: async () => Author.find({}).populate({path: 'books', model: 'Book'}),
       me: async (root, args, context) => context.currentUser,
       allGenres: async () => {
         const books = Book.find({})
@@ -35,8 +35,13 @@ const resolvers = {
         }
     },
     Author: {
-      bookCount: async (obj) => {
-          return (await Book.find({author: obj._id})).length
+      bookCount: async (obj, args, context) => {
+        const books  = await context.loaders.books.load(obj._id)
+        return books.length
+      },
+      books: async (obj, args, context) => {
+        const books  = await context.loaders.books.load(obj._id)
+        return books
       }
     },
     Book: {
