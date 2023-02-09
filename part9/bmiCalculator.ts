@@ -1,4 +1,9 @@
+if (process.argv.length < 4) {
+    console.log("Usage: npm run calculateBmi *height in cm* *weight in kg*")
+}
 
+const height = Number(process.argv[2])
+const weight = Number(process.argv[3])
 
 const calculateBmi= (height: number, weight: number) : string => {
     const bmi = weight/(height/100)**2
@@ -19,4 +24,4 @@ const calculateBmi= (height: number, weight: number) : string => {
     return "Underweight"
 }
 
-console.log(calculateBmi(180, 74))
+console.log(calculateBmi(height, weight))
