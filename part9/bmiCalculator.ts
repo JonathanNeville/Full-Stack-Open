@@ -5,7 +5,7 @@ if (process.argv.length < 4) {
 const height = Number(process.argv[2])
 const weight = Number(process.argv[3])
 
-const calculateBmi= (height: number, weight: number) : string => {
+export const calculateBmi= (height: number, weight: number) : string => {
     const bmi = weight/(height/100)**2
 
     if (height < 0 || weight < 0) {
