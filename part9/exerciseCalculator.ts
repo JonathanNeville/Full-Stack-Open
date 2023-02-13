@@ -12,7 +12,7 @@ interface  ExerciseSummary {
     average: number
 }
 
-const calculateExercises = (trainingHours: number[], target: number) : ExerciseSummary => {
+export const calculateExercises = (trainingHours: number[], target: number) : ExerciseSummary => {
     const periodLength = trainingHours.length;
     const trainingDays = trainingHours.filter(d => d > 0).length;
     let totalHours = 0;
