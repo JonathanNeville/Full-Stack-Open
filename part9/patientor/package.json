@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
-    "dev": "ts-node-dev index.ts",
+    "tsc": "tsc -p src/tsconfig.json",
+    "dev": "ts-node-dev src/index.ts",
     "lint": "eslint --ext .ts .",
-    "start": "node build/index.js"
+    "start": "node src/build/src/index.js"
   },
   "author": "Jonathan Neville",
   "license": "ISC",
