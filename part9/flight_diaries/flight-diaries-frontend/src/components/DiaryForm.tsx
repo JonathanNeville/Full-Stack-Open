@@ -9,8 +9,8 @@ interface DiaryFormProps {
 
 const DiaryForm = (props: DiaryFormProps) => {
     const [date, setDate] = useState('')
-    const [visibility, setVisibility] = useState('')
-    const [weather, setWeather] = useState('')
+    const [visibility, setVisibility] = useState('great')
+    const [weather, setWeather] = useState('sunny')
     const [comment, setComment] = useState('')
     const [notification, setNotification] = useState('')
 
@@ -56,28 +56,20 @@ const DiaryForm = (props: DiaryFormProps) => {
                  type="date"
                 />
                 <br/>
-                Visibility: <select
-                  value={visibility}
-                  onChange={(event) => {setVisibility(event.target.value)}}
-                >
-                    <option value="">-</option>
-                    <option value="great" selected>great</option>
-                    <option value="good">good</option>
-                    <option value="ok">ok</option>
-                    <option value="poor">poor</option>
-                </select>
+                Visibility: <div>
+                    Great: <input type="radio" name="visibility" onChange={() => setVisibility("great") }/>
+                    Good: <input type="radio" name="visibility" onChange={() => setVisibility("good") }/>
+                    Ok: <input type="radio" name="visibility" onChange={() => setVisibility("ok") }/>
+                    Poor: <input type="radio" name="visibility" onChange={() => setVisibility("poor") }/>
+                </div>
                 <br />
-                Weather: <select
-                  value={weather}
-                  onChange={(event) => {setWeather(event.target.value)}}
-                >
-                  <option value="">-</option>
-                  <option value="sunny">sunny</option>
-                  <option value="rainy">rainy</option>
-                  <option value="cloudy">cloudy</option>
-                  <option value="stormy">stormy</option>
-                  <option value="windy">windy</option>
-                </select>
+                Weather: <div>
+                    sunny: <input type="radio" name="weather" onChange={() => setWeather("sunny") }/>
+                    rainy: <input type="radio" name="weather" onChange={() => setWeather("rainy") }/>
+                    cloudy: <input type="radio" name="weather" onChange={() => setWeather("cloudy") }/>
+                    stormy: <input type="radio" name="weather" onChange={() => setWeather("stormy") }/>
+                    windy: <input type="radio" name="weather" onChange={() => setWeather("windy") }/>
+                </div>
                 <br />
                 Comment: <input 
                   value={comment}
