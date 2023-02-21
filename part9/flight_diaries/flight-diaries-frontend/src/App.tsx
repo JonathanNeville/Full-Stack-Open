@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import DiaryForm from "./components/DiaryForm";
 
-interface Diary {
+export interface Diary {
   id: number;
   date: string;
   weather: string;
@@ -20,6 +21,7 @@ function App() {
 
   return (
     <div>
+      <DiaryForm diaries={diaries} setDiaries={setDiaries}/>
       <div>
         <h2>Diary Entries</h2>
         <div>
@@ -31,9 +33,7 @@ function App() {
             </div>)
           })}
         </div>
-        
       </div>
-      
     </div>
   );
 }
