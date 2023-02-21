@@ -2,7 +2,7 @@ import { v1 as uuid} from 'uuid'
 import patientData from '../../data/patients'
 import { NewPatient, NonSensitivePatient, Patient } from '../types'
 
-const patients: Patient[] = patientData as Patient[]
+const patients: Patient[] = patientData.map(p => ({...p, entries: []})) as Patient[]
 
 const getEntries = () => {
     return JSON.stringify(patients)
@@ -18,6 +18,14 @@ const getNonSensitiveEntries = (): NonSensitivePatient[] => {
     })) as NonSensitivePatient[]
 }
 
+const getPatientById = (id: string) : Patient  => {
+    const patient =  patients.find(p => p.id === id)
+    if (!patient) {
+        throw new Error(`Error: Patient With id ${id} does not exist`)
+    }
+    return patient
+}
+
 const addPatient  = (newPatient: NewPatient): Patient => {
     const addedPatient: Patient = {
         ...newPatient,
@@ -30,5 +38,6 @@ const addPatient  = (newPatient: NewPatient): Patient => {
 export default {
     getEntries,
     getNonSensitiveEntries,
+    getPatientById,
     addPatient
 }
