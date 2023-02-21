@@ -12,6 +12,7 @@ const DiaryForm = (props: DiaryFormProps) => {
     const [visibility, setVisibility] = useState('')
     const [weather, setWeather] = useState('')
     const [comment, setComment] = useState('')
+    const [notification, setNotification] = useState('')
 
     const submitDiary = (event: React.SyntheticEvent) => {
         event.preventDefault()
@@ -23,11 +24,20 @@ const DiaryForm = (props: DiaryFormProps) => {
             comment: comment
         }
 
+
         axios.post('http://localhost:3001/api/diaries', diaryToAdd).then(
             response => {
                 props.setDiaries(props.diaries.concat(response.data))
             }
-        )
+        ).catch((error) => {
+            if (axios.isAxiosError(error)) {
+                console.log(error.status)
+                console.error(error.response)
+                setNotification(error.response?.data)
+                setTimeout(() => setNotification(''), 5000)
+            }
+            
+        })
 
         setDate('')
         setVisibility('')
@@ -38,6 +48,7 @@ const DiaryForm = (props: DiaryFormProps) => {
     return(
         <div>
             <h3>Add new entry</h3>
+            <p style={{color: "red"}}>{notification}</p>
             <form onSubmit={submitDiary}>
                 Date: <input
                  value={date}
