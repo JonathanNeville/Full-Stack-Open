@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { Patient } from "../../types"
 import patientService from "../../services/patients"
 import { useEffect, useState } from "react"
+import EntriesList from "../EntriesList"
 
 
 
@@ -27,6 +28,7 @@ const PatientInfo = () => {
             <Typography variant="h4">{patient.name} {patient.gender === "female" ? <Female/> : patient.gender === "male" ? <Male/>: <Transgender/>}</Typography>
             <Typography>ssh: {patient.ssn}</Typography>
             <Typography>occupation: {patient.occupation}</Typography>
+            <EntriesList entries={patient.entries}/>
         </div>
     )
 }
