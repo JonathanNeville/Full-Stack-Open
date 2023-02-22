@@ -2,7 +2,7 @@ import { v1 as uuid} from 'uuid'
 import patientData from '../../data/patients'
 import { NewPatient, NonSensitivePatient, Patient } from '../types'
 
-const patients: Patient[] = patientData.map(p => ({...p, entries: []})) as Patient[]
+const patients: Patient[] = patientData as Patient[]
 
 const getEntries = () => {
     return JSON.stringify(patients)
