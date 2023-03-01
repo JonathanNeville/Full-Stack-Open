@@ -30,9 +30,21 @@ const addPatient = (newPatient) => {
     patients.push(addedPatient);
     return addedPatient;
 };
+const addEntry = (newEntry, patientId) => {
+    const addedEntry = Object.assign(Object.assign({}, newEntry), { id: (0, uuid_1.v1)() });
+    try {
+        const patientIndex = patients.findIndex(obj => obj.id === patientId);
+        patients[patientIndex].entries.push(addedEntry);
+        return patients[patientIndex];
+    }
+    catch (_a) {
+        throw new Error("couldnt add entry");
+    }
+};
 exports.default = {
     getEntries,
     getNonSensitiveEntries,
     getPatientById,
-    addPatient
+    addPatient,
+    addEntry
 };

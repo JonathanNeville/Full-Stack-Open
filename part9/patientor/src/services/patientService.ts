@@ -1,6 +1,6 @@
 import { v1 as uuid} from 'uuid'
 import patientData from '../../data/patients'
-import { NewPatient, NonSensitivePatient, Patient } from '../types'
+import { Entry, NewEntry, NewPatient, NonSensitivePatient, Patient } from '../types'
 
 const patients: Patient[] = patientData as Patient[]
 
@@ -35,9 +35,25 @@ const addPatient  = (newPatient: NewPatient): Patient => {
     return addedPatient
 }
 
+const addEntry = (newEntry: NewEntry, patientId: Patient["id"]): Patient => {
+    const addedEntry: Entry = {
+        ...newEntry,
+        id: uuid()
+    }
+
+    try {
+        const patientIndex = patients.findIndex(obj => obj.id === patientId)
+        patients[patientIndex].entries.push(addedEntry)
+        return patients[patientIndex]
+    } catch {
+        throw new Error("couldnt add entry")
+    }
+}
+
 export default {
     getEntries,
     getNonSensitiveEntries,
     getPatientById,
-    addPatient
+    addPatient,
+    addEntry
 }

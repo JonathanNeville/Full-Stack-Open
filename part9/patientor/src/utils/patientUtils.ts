@@ -1,6 +1,6 @@
-import { Gender, NewPatient } from "./types";
+import { Gender, NewPatient } from "../types";
 
-const isString = (text: unknown): text is string => {
+export const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
 }
 
@@ -8,7 +8,7 @@ const isGender = (param: string): param is Gender => {
     return Object.values(Gender).map(g => g.toString()).includes(param)
 }
 
-const isDate = (date: string): boolean => {
+export const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date))
 }
 

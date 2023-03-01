@@ -41,7 +41,7 @@ interface OccupationalHealthcareEntry extends BaseEntry {
     sickLeave?: SickLeave;
 }
 
-interface Discharge {
+export interface Discharge {
     date: string;
     criteria: string;
 }
@@ -63,6 +63,11 @@ export interface Patient {
     entries: Entry[]
 }
 
+//copied from the course material
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatient = Omit<Patient, 'id'>
+
+export type NewEntry = UnionOmit<Entry, 'id'>
