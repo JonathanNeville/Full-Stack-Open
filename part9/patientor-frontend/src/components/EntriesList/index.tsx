@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { Diagnosis, Entry } from "../../types";
 import EntryDetails from "./EntryDetails";
 
@@ -15,9 +15,9 @@ const EntriesList = ({entries, diagnoses} : EntriesListProps) => {
             {
                 entries.map(e => {
                     return (
-                        <div key={e.id}>
+                        <Paper elevation={3} key={e.id} sx={{margin: 2, marginLeft: 0, padding: 1}}>
                             <EntryDetails entry={e} diagnoses={diagnoses}/>
-                        </div>
+                        </Paper>
                     )
                 })
             }

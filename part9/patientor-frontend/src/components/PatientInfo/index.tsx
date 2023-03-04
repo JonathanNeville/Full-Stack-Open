@@ -5,6 +5,7 @@ import { Diagnosis, Patient } from "../../types"
 import patientService from "../../services/patients"
 import { useEffect, useState } from "react"
 import EntriesList from "../EntriesList"
+import EntryForm from "../EntryForm"
 
 interface Props {
     diagnoses: Diagnosis[];
@@ -30,6 +31,7 @@ const PatientInfo = ({diagnoses} : Props) => {
             <Typography variant="h4">{patient.name} {patient.gender === "female" ? <Female/> : patient.gender === "male" ? <Male/>: <Transgender/>}</Typography>
             <Typography>ssh: {patient.ssn}</Typography>
             <Typography>occupation: {patient.occupation}</Typography>
+            <EntryForm patientId={patient.id} setPatient={setPatient} patient={patient}/>
             <EntriesList entries={patient.entries} diagnoses={diagnoses}/>
         </div>
     )
