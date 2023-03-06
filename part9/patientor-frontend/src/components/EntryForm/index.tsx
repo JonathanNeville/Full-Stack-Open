@@ -1,8 +1,6 @@
-import { Alert, Box, Button, FormControlLabel, Radio, RadioGroup, SelectChangeEvent, TextField, Typography } from "@mui/material"
-import axios from "axios";
-import { SetStateAction, SyntheticEvent, useState } from "react"
-import patientService from "../../services/patients"
-import { NewEntry, Patient } from "../../types"
+import { Box, FormControlLabel, Radio, RadioGroup } from "@mui/material"
+import { useState } from "react"
+import { Diagnosis, Patient } from "../../types"
 import HealtcheckEntryForm from "./HealtcheckEntryForm";
 import HospitalEntryForm from "./HospitalEntryForm";
 import OccupationalHealtcareEntryForm from "./OccupationalHealthcareEntryForm";
@@ -11,6 +9,7 @@ interface Props {
     patientId: string;
     setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
     patient: Patient | null;
+    diagnoses: Diagnosis[];
 }
 
 const EntryForm = (props: Props) => {
@@ -34,9 +33,9 @@ const EntryForm = (props: Props) => {
                     <FormControlLabel value="OccupationalHealthcare" label="Occupational Healthcare" control={<Radio/>}></FormControlLabel>
                     <FormControlLabel value="Hospital" label="Hospital" control={<Radio/>}></FormControlLabel>
                 </RadioGroup>
-                <HealtcheckEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} />
-                <HospitalEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} />
-                <OccupationalHealtcareEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} />
+                <HealtcheckEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} diagnoses={props.diagnoses}/>
+                <HospitalEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} diagnoses={props.diagnoses}/>
+                <OccupationalHealtcareEntryForm patientId={props.patientId} setPatient={props.setPatient} patient={props.patient} entryType= {entryType} diagnoses={props.diagnoses}/>
 
             </Box>
         </div>

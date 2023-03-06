@@ -31,7 +31,7 @@ const PatientInfo = ({diagnoses} : Props) => {
             <Typography variant="h4">{patient.name} {patient.gender === "female" ? <Female/> : patient.gender === "male" ? <Male/>: <Transgender/>}</Typography>
             <Typography>ssh: {patient.ssn}</Typography>
             <Typography>occupation: {patient.occupation}</Typography>
-            <EntryForm patientId={patient.id} setPatient={setPatient} patient={patient}/>
+            <EntryForm patientId={patient.id} setPatient={setPatient} patient={patient} diagnoses={diagnoses}/>
             <EntriesList entries={patient.entries} diagnoses={diagnoses}/>
         </div>
     )

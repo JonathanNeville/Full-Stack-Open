@@ -1,7 +1,7 @@
-import { Alert, Box, Button, TextField } from "@mui/material"
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import axios from "axios"
 import { useState, SyntheticEvent } from "react"
-import { NewEntry, Patient, SickLeave } from "../../types"
+import { Diagnosis, NewEntry, Patient, SickLeave } from "../../types"
 import patientService from "../../services/patients"
 
 interface Props {
@@ -9,13 +9,14 @@ interface Props {
     setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
     patient: Patient | null;
     entryType: string;
+    diagnoses: Diagnosis[];
 }
 
 const OccupationalHealtcareEntryForm = (props: Props) => {
     const [description, setDescription] = useState("")
     const [date, setDate] = useState("")
     const [specialist, setSpecialist] = useState("")
-    const [diagnosisCodes, setDiagnosisCodes] = useState("")
+    const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([])
     const [employerName, setEmployerName] = useState("")
     const [sickleaveStartDate, setSickleaveStartDate] = useState("")
     const [sickleaveEndDate, setSickleaveEndDate] = useState("")
@@ -31,11 +32,9 @@ const OccupationalHealtcareEntryForm = (props: Props) => {
             specialist: specialist,
             employerName: employerName
         }
-        const diagnosisCodesList  = diagnosisCodes.split(',')
-        if (diagnosisCodesList.length > 0) {
-            entry.diagnosisCodes = diagnosisCodesList
+        if (diagnosisCodes.length > 0) {
+            entry.diagnosisCodes = diagnosisCodes
         }
-
         if (sickleaveStartDate.length > 0 && sickleaveEndDate.length > 0) {
             const sickLeave: SickLeave = {
                 startDate: sickleaveStartDate,
@@ -68,7 +67,7 @@ const OccupationalHealtcareEntryForm = (props: Props) => {
           }
           setDescription("")
           setDate("")
-          setDiagnosisCodes("")
+          setDiagnosisCodes([])
           setSickleaveStartDate("")
           setSickleaveEndDate("")
           setEmployerName("")
@@ -90,7 +89,18 @@ const OccupationalHealtcareEntryForm = (props: Props) => {
                 <TextField InputLabelProps={{shrink: true}} type="date" label="Sickleave Start Date" value={sickleaveStartDate} onChange={(event) => setSickleaveStartDate(event.target.value)} /> <br />
                 <TextField InputLabelProps={{shrink: true}} type="date" label="Sickleave End Date" value={sickleaveEndDate} onChange={(event) => setSickleaveEndDate(event.target.value)} /> <br />
                 <TextField label="Employer Name" value={employerName} onChange={(event) => setEmployerName(event.target.value)} /> <br />
-                <TextField label="Diagnosis Codes" value={diagnosisCodes} onChange={(event) => setDiagnosisCodes(event.target.value)} /> <br />
+                <FormControl fullWidth>
+                    <InputLabel>DiagnosisCodes</InputLabel>
+                    <Select 
+                        label="Diagnosis Codes" 
+                        value={diagnosisCodes} 
+                        onChange={(event) => setDiagnosisCodes(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)} 
+                        multiple
+                        autoWidth
+                    >
+                        {props.diagnoses.map(d => <MenuItem key={d.code} value={d.code}>{d.code}</MenuItem>)}
+                    </Select> <br />
+                </FormControl>
                 <Button type="submit">Add</Button> <br />
             </form>
         </div>

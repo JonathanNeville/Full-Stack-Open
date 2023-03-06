@@ -1,7 +1,7 @@
-import { Alert, Box, Button, TextField } from "@mui/material"
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import axios from "axios"
 import { useState, SyntheticEvent } from "react"
-import { NewEntry, Patient } from "../../types"
+import { Diagnosis, NewEntry, Patient } from "../../types"
 import patientService from "../../services/patients"
 
 interface Props {
@@ -9,13 +9,14 @@ interface Props {
     setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
     patient: Patient | null;
     entryType: string;
+    diagnoses: Diagnosis[];
 }
 
 const HospitalEntryForm = (props: Props) => {
     const [description, setDescription] = useState("")
     const [date, setDate] = useState("")
     const [specialist, setSpecialist] = useState("")
-    const [diagnosisCodes, setDiagnosisCodes] = useState("")
+    const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([])
     const [dischargeDate, setDischargeDate] = useState("")
     const [dischargeCriteria, setDischargeCriterea] = useState("")
 
@@ -34,8 +35,8 @@ const HospitalEntryForm = (props: Props) => {
             }
         }
         if (diagnosisCodes.length > 0) {
-            const diagnosisCodesList  = diagnosisCodes.split(',')
-            entry.diagnosisCodes = diagnosisCodesList
+            
+            entry.diagnosisCodes = diagnosisCodes
         }
         try {
             const updatedPatient = await patientService.postEntry(entry, props.patientId)
@@ -61,7 +62,7 @@ const HospitalEntryForm = (props: Props) => {
           }
           setDescription("")
           setDate("")
-          setDiagnosisCodes("")
+          setDiagnosisCodes([])
           setDischargeDate("")
           setDischargeCriterea("")
           setSpecialist("")
@@ -81,7 +82,18 @@ const HospitalEntryForm = (props: Props) => {
                 <TextField label="Specialist" value={specialist} onChange={(event) => setSpecialist(event.target.value)} /> <br />
                 <TextField InputLabelProps={{shrink: true}} type="date" label="Discharge date" value={dischargeDate} onChange={(event) => setDischargeDate(event.target.value)} /> <br />
                 <TextField label="Discharge Criteria" value={dischargeCriteria} onChange={(event) => setDischargeCriterea(event.target.value)} /> <br />
-                <TextField label="Diagnosis Codes" value={diagnosisCodes} onChange={(event) => setDiagnosisCodes(event.target.value)} /> <br />
+                <FormControl fullWidth>
+                    <InputLabel>DiagnosisCodes</InputLabel>
+                    <Select 
+                        label="Diagnosis Codes" 
+                        value={diagnosisCodes} 
+                        onChange={(event) => setDiagnosisCodes(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)} 
+                        multiple
+                        autoWidth
+                    >
+                        {props.diagnoses.map(d => <MenuItem key={d.code} value={d.code}>{d.code}</MenuItem>)}
+                    </Select> <br />
+                </FormControl>
                 <Button type="submit">Add</Button> <br />
             </form>
         </div>
